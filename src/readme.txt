@@ -1,5 +1,5 @@
 A project i started Wednesday 4th of March.
-This is the projected i built this from: https://github.com/clementmihailescu/Pathfinding-Visualizer
+This is project is built on https://github.com/clementmihailescu/Pathfinding-Visualizer
 
 
 This project is to showcase my ability with javascript/ES7 and path algorithms.
