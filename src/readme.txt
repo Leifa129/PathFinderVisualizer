@@ -1,5 +1,8 @@
 A project i started Wednesday 4th of March.
-This project is to showcase my ability with react and path algorithms.
+This is the projected i built this from: https://github.com/clementmihailescu/Pathfinding-Visualizer
+
+
+This project is to showcase my ability with javascript/ES7 and path algorithms.
 
 I expect to finish the project by the end of the weekend Sunday 8th of March.
 
