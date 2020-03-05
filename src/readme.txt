@@ -1,9 +1,9 @@
-A project i started wendesday 4th of March.
+A project i started Wednesday 4th of March.
 This project is to showcase my ability with react and path algorithms.
 
-I expect to finish the project by the end of the weekend sunday 8. of March.
+I expect to finish the project by the end of the weekend Sunday 8th of March.
 
-What i need to do:
+What I need to do:
 Add automatic recomputation of the algorithm if start/end node is changed or if any walls are added.
 Add more path searching algorithms.
 Tweak the randomized weighting to gain more varieties of best paths.
