@@ -1,0 +1,15 @@
+A project i started wendesday 4th of March.
+This project is to showcase my ability with react and path algorithms.
+
+I expect to finish the project by the end of the weekend sunday 8. of March.
+
+What i need to do:
+Add automatic recomputation of the algorithm if start/end node is changed or if any walls are added.
+Add more path searching algorithms.
+Tweak the randomized weighting to gain more varieties of best paths.
+Give option to generate a preset of walls.
+Make the application more user friendly.
+Possibly add explanations on how to use the program.
+Add more styling, find suitable icons for the start and end node.
+Refactor and cleanup.
+Host the project on github.
