@@ -141,7 +141,6 @@ export default class PathFindingVisualizer extends Component {
   visualizeInstantDijkstra() {
     const {grid} = this.state;
     clearGrid(grid);
-    //reset distances
     const newGrid = resetGrid(grid)
 
       const startNode = newGrid[startNodeRow][startNodeCol];
@@ -243,7 +242,7 @@ const resetGrid = grid => {
 }
 
 const clearGrid = grid => {
-// const newGrid = grid.slice();
+
   for (let row = 0; row < NUMBER_OF_ROWS; row++) {
     for (let col = 0; col < NUMBER_OF_COLS; col++) {
       let className = 'node';
