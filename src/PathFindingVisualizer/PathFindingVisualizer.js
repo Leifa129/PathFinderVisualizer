@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Node from './Node/Node';
 import {dijkstra, getNodesInShortestPathOrder} from '../Algorithms/Dijkstra';
+import {aStar} from '../Algorithms/AStar';
 
 import './PathFindingVisualizer.css';
 
@@ -123,7 +124,7 @@ export default class PathFindingVisualizer extends Component {
   }
 
 
-  animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
+  animateSearchSpace(visitedNodesInOrder, nodesInShortestPathOrder) {
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
@@ -170,7 +171,7 @@ export default class PathFindingVisualizer extends Component {
     }
   }
 
-  visualizeDijkstra() {
+  visualizeAlgorithm() {
     const {grid} = this.state;
     clearGrid(grid);
     const newGrid = resetGrid(grid)
@@ -178,7 +179,19 @@ export default class PathFindingVisualizer extends Component {
     const finishNode = newGrid[finishNodeRow][finishNodeCol];
     const visitedNodesInOrder = dijkstra(newGrid, startNode, finishNode);
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    this.animateSearchSpace(visitedNodesInOrder, nodesInShortestPathOrder);
+    this.setState({ranAlgorithm: true});
+  }
+
+  visualizeAStar() {
+    const {grid} = this.state;
+    clearGrid(grid);
+    const newGrid = resetGrid(grid)
+    const startNode = newGrid[startNodeRow][startNodeCol];
+    const finishNode = newGrid[finishNodeRow][finishNodeCol];
+    const visitedNodesInOrder = aStar(newGrid, startNode, finishNode);
+    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+    this.animateSearchSpace(visitedNodesInOrder, nodesInShortestPathOrder);
     this.setState({ranAlgorithm: true});
   }
 
@@ -199,8 +212,12 @@ export default class PathFindingVisualizer extends Component {
 
     return (
         <>
-          <button onClick={() => this.visualizeDijkstra()}>
+          <button onClick={() => this.visualizeAlgorithm()}>
             Visualize Dijkstra's Algorithm
+          </button>
+
+          <button onClick={() => this.visualizeAStar()}>
+            Visualize A* Algorithm
           </button>
           <div className="grid">
             {grid.map((row, rowIdx) => {
@@ -253,8 +270,9 @@ const createNode = (col, row) => {
     isStart: isStart,
     isFinish: isFinish,
     distance: Infinity,
+    f: Infinity,
     isVisited: false,
-    weight: isFinish || isStart ? 0 : 1 + Math.round( Math.random() * 8),
+    weight:  1,
     isWall: false,
     previousNode: null,
   };
@@ -277,6 +295,7 @@ const resetGrid = grid => {
   for (let row = 0; row < NUMBER_OF_ROWS; row++) {
     for (let col = 0; col < NUMBER_OF_COLS; col++) {
       newGrid[row][col].distance = Infinity;
+      newGrid[row][col].f = Infinity;
       newGrid[row][col].previousNode = null;
       newGrid[row][col].isVisited = false;
     }

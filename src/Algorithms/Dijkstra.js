@@ -3,9 +3,9 @@ import GraphHelper from "./GraphHelper";
 export function dijkstra(grid, startNode, finishNode) {
     const visitedNodesInOrder = [];
     startNode.distance = 0;
-    const unvisitedNodes = getAllNodes(grid);
+    const unvisitedNodes = GraphHelper.getAllNodes(grid);
     while (!!unvisitedNodes.length) {
-        sortNodesByDistance(unvisitedNodes);
+        GraphHelper.sortNodesByDistance(unvisitedNodes);
         const closestNode = unvisitedNodes.shift();
         // If we encounter a wall, we skip it.
          if (closestNode.isWall) continue;
@@ -28,7 +28,7 @@ function updateUnvisitedNeighbors(node, grid){
              neighbor.distance = temp;
              neighbor.previousNode = node;
          }
-
+        //For unweighted graphs, basically breadth first search.
        // neighbor.distance = node.distance + 1;
        // neighbor.previousNode = node;
     }
