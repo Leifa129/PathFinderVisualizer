@@ -13,7 +13,7 @@ What I need to do:
 - [ ] Give option to generate a preset of walls.
 - [ ] Make the application more user friendly.
 - [ ] Possibly add explanations on how to use the program.
-- [ ]Add more styling, find suitable icons for the start and end node.
+- [ ] Add more styling, find suitable icons for the start and end node.
 - [ ] Refactor and cleanup.
 - [x] Host the project on github.
 
