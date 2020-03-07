@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import Node from './Node/Node';
-import {dijkstra, getNodesInShortestPathOrder} from '../Algorithms/Dijkstra';
-import {aStar} from '../Algorithms/AStar';
 
 import './PathFindingVisualizer.css';
+import AlgorithmController from '../Algorithms/AlgorithmController';
 
 let startNodeRow = 10;
 let startNodeCol = 15;
@@ -21,6 +20,7 @@ export default class PathFindingVisualizer extends Component {
       startSelected: false,
       finishSelected: false,
       ranAlgorithm: false,
+      selectedAlgorithm: 'dijkstra',
     };
   }
 
@@ -43,7 +43,7 @@ export default class PathFindingVisualizer extends Component {
     const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
     this.setState({grid: newGrid, mouseIsPressed: true});
     if(this.state.ranAlgorithm)
-      this.visualizeInstantDijkstra();
+      this.visualizeInstantAlgorithm();
 
   }
 
@@ -57,17 +57,14 @@ export default class PathFindingVisualizer extends Component {
         startNodeRow = row;
         startNodeCol = col;
 
-        if(!this.state.ranAlgorithm) {
-          const {grid} = this.state;
           grid[prevStartNodeRow][prevStartNodeCol].isStart = false;
           grid[startNodeRow][startNodeCol].isStart = true;
 
 
           this.setState({grid: grid});
-        }
 
-     else {
-       this.visualizeInstantDijkstra();
+     if(this.state.ranAlgorithm) {
+       this.visualizeInstantAlgorithm();
      }
 
 
@@ -82,15 +79,14 @@ export default class PathFindingVisualizer extends Component {
     finishNodeRow = row;
     finishNodeCol = col;
 
-    if(!this.state.ranAlgorithm) {
+
       grid[prevFinishNodeRow][prevFinishNodeCol].isFinish = false;
       grid[finishNodeRow][finishNodeCol].isFinish = true;
 
       this.setState({grid: grid});
-    }
 
-    else {
-      this.visualizeInstantDijkstra();
+    if(this.state.ranAlgorithm) {
+      this.visualizeInstantAlgorithm();
     }
 
   }
@@ -110,13 +106,15 @@ export default class PathFindingVisualizer extends Component {
       return;
     }
 
+    // Make sure that we dont put a wall over the start or finish node
+      if(!(row === startNodeRow && col == startNodeCol) && !(row === finishNodeRow && col === finishNodeCol) ) {
+        const newGrid = getNewGridWithWallToggled(grid, row, col);
+        this.setState({grid: newGrid});
 
-    const newGrid = getNewGridWithWallToggled(grid, row, col);
-    this.setState({grid: newGrid});
-
-    if(ranAlgorithm){
-      this.visualizeInstantDijkstra();
-    }
+        if (ranAlgorithm) {
+          this.visualizeInstantAlgorithm();
+        }
+      }
   }
 
   handleMouseUp() {
@@ -140,7 +138,7 @@ export default class PathFindingVisualizer extends Component {
     }
   }
 
-  animateInstantDijkstra(visitedNodesInOrder, nodesInShortestPathOrder){
+  animateInstantAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder){
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
           this.animateInstantShortestPath(nodesInShortestPathOrder);
@@ -172,59 +170,53 @@ export default class PathFindingVisualizer extends Component {
   }
 
   visualizeAlgorithm() {
-    const {grid} = this.state;
+    const {grid, selectedAlgorithm} = this.state;
     clearGrid(grid);
-    const newGrid = resetGrid(grid)
+    const newGrid = resetGrid(grid);
     const startNode = newGrid[startNodeRow][startNodeCol];
     const finishNode = newGrid[finishNodeRow][finishNodeCol];
-    const visitedNodesInOrder = dijkstra(newGrid, startNode, finishNode);
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+
+    const visitedNodesInOrder = AlgorithmController.runAlgorithm(newGrid, startNode, finishNode, selectedAlgorithm);
+    const nodesInShortestPathOrder = AlgorithmController.getNodesInShortestPathOrder(finishNode);
     this.animateSearchSpace(visitedNodesInOrder, nodesInShortestPathOrder);
     this.setState({ranAlgorithm: true});
   }
 
-  visualizeAStar() {
-    const {grid} = this.state;
-    clearGrid(grid);
-    const newGrid = resetGrid(grid)
-    const startNode = newGrid[startNodeRow][startNodeCol];
-    const finishNode = newGrid[finishNodeRow][finishNodeCol];
-    const visitedNodesInOrder = aStar(newGrid, startNode, finishNode);
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    this.animateSearchSpace(visitedNodesInOrder, nodesInShortestPathOrder);
-    this.setState({ranAlgorithm: true});
-  }
 
-  visualizeInstantDijkstra() {
-    const {grid} = this.state;
+
+  visualizeInstantAlgorithm() {
+    const {grid, selectedAlgorithm} = this.state;
      clearGrid(grid);
     const newGrid = resetGrid(grid)
 
       const startNode = newGrid[startNodeRow][startNodeCol];
     const finishNode = newGrid[finishNodeRow][finishNodeCol];
-    const visitedNodesInOrder = dijkstra(newGrid, startNode, finishNode);
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    this.animateInstantDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    const visitedNodesInOrder = AlgorithmController.runAlgorithm(newGrid, startNode, finishNode, selectedAlgorithm);
+    const nodesInShortestPathOrder = AlgorithmController.getNodesInShortestPathOrder(finishNode);
+    this.animateInstantAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
   }
 
   render() {
-    const {grid, mouseIsPressed} = this.state;
+    const {grid, mouseIsPressed, selectedAlgorithm} = this.state;
 
     return (
         <>
           <button onClick={() => this.visualizeAlgorithm()}>
-            Visualize Dijkstra's Algorithm
+            Visualize Algorithm
           </button>
 
-          <button onClick={() => this.visualizeAStar()}>
-            Visualize A* Algorithm
-          </button>
+          <select value={selectedAlgorithm}
+                  onChange={event => {this.setState({selectedAlgorithm: event.target.value})}}
+                  id="selectedAlgorithm">
+            <option value="dijkstra">Dijkstra's algorithm</option>
+            <option value="aStar">A* algorithm</option>
+          </select>
           <div className="grid">
             {grid.map((row, rowIdx) => {
               return (
                   <div key={rowIdx}>
                     {row.map((node, nodeIdx) => {
-                      const {row, col, isFinish, isStart, isWall, weight} = node;
+                      const {row, col, isFinish, isStart, isWall, weight, isVisited} = node;
                       return (
                           <Node
                               key={nodeIdx}
@@ -233,6 +225,7 @@ export default class PathFindingVisualizer extends Component {
                               isFinish={isFinish}
                               isStart={isStart}
                               isWall={isWall}
+                              isVisited={isVisited}
                               mouseIsPressed={mouseIsPressed}
                               onMouseDown={(row, col) => this.handleMouseDown(row, col)}
                               onMouseEnter={(row, col) =>
@@ -250,6 +243,7 @@ export default class PathFindingVisualizer extends Component {
     );
   }
 }
+
 const getInitialGrid = () => {
   const grid = [];
   for (let row = 0; row < NUMBER_OF_ROWS; row++) {
@@ -270,7 +264,6 @@ const createNode = (col, row) => {
     isStart: isStart,
     isFinish: isFinish,
     distance: Infinity,
-    f: Infinity,
     isVisited: false,
     weight:  1,
     isWall: false,
@@ -295,7 +288,6 @@ const resetGrid = grid => {
   for (let row = 0; row < NUMBER_OF_ROWS; row++) {
     for (let col = 0; col < NUMBER_OF_COLS; col++) {
       newGrid[row][col].distance = Infinity;
-      newGrid[row][col].f = Infinity;
       newGrid[row][col].previousNode = null;
       newGrid[row][col].isVisited = false;
     }

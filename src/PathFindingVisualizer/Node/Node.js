@@ -14,6 +14,7 @@ export default class Node extends Component {
       onMouseEnter,
       onMouseUp,
       row,
+      isVisited,
     } = this.props;
     const extraClassName = isFinish
         ? 'node-finish'
@@ -26,10 +27,10 @@ export default class Node extends Component {
     return (
         <div
             id={`node-${row}-${col}`}
-            className={`node ${extraClassName}`}
+            className={isVisited ? document.getElementById(`node-${row}-${col}`).className : `node ${extraClassName}`}
             onMouseDown={() => onMouseDown(row, col)}
             onMouseEnter={() => onMouseEnter(row, col)}
-            onMouseUp={() => onMouseUp()}>{ weight > 1 ? weight : ''} &nbsp;</div>
+            onMouseUp={() => onMouseUp()}>{ weight > 1 ? weight : ''}&nbsp; </div>
     );
   }
 }
