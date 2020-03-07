@@ -21,7 +21,7 @@ export function aStar(grid, startNode, finishNode) {
     }
 }
 
-
+// Find how many walls there are in path maybe
 function heuristic(startNode, finishNode){
        const dRow = finishNode.row - startNode.row;
        const dCol = finishNode.col - startNode.col;

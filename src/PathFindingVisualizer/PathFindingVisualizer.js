@@ -182,7 +182,18 @@ export default class PathFindingVisualizer extends Component {
     this.setState({ranAlgorithm: true});
   }
 
+    generateWeights() {
+      const newGrid = this.state.grid.slice();
+        for(let i = 0; i < NUMBER_OF_ROWS; i++){
+          for(let j = 0; j < NUMBER_OF_COLS; j++){
+            if(Math.random() < 0.1){
+              newGrid[i][j].weight = Math.round(1 + Math.random() * 8);
+            }
+          }
+      }
+      this.setState({grid: newGrid});
 
+  }
 
   visualizeInstantAlgorithm() {
     const {grid, selectedAlgorithm} = this.state;
@@ -201,16 +212,26 @@ export default class PathFindingVisualizer extends Component {
 
     return (
         <>
-          <button onClick={() => this.visualizeAlgorithm()}>
+          <div className="header">
+            <div className="item">
+          <button className="btn btn-dark ml-3 mt-2"  onClick={() => this.visualizeAlgorithm()}>
             Visualize Algorithm
           </button>
-
-          <select value={selectedAlgorithm}
-                  onChange={event => {this.setState({selectedAlgorithm: event.target.value})}}
+          </div>
+            <div className="item form-group">
+          <select className="form-control w-50 m-2" value={selectedAlgorithm}
+                  onChange={event => {
+                    this.setState({selectedAlgorithm: event.target.value})
+                  }}
                   id="selectedAlgorithm">
             <option value="dijkstra">Dijkstra's algorithm</option>
             <option value="aStar">A* algorithm</option>
           </select>
+          </div>
+            <div className="item">
+              <button className="btn btn-primary mr-3 mt-2 float-right" onClick={() => this.generateWeights()}>Generate weights</button>
+            </div>
+          </div>
           <div className="grid">
             {grid.map((row, rowIdx) => {
               return (
