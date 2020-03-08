@@ -213,25 +213,32 @@ export default class PathFindingVisualizer extends Component {
     return (
         <>
           <div className="header">
+            <div className="item form-group">
+            <select className="form-control w-50 m-2 float-right " value={selectedAlgorithm}
+                    onChange={event => {
+                      this.setState({selectedAlgorithm: event.target.value})
+                    }}
+                    id="selectedAlgorithm">
+              <option value="dijkstra">Dijkstra's algorithm</option>
+              <option value="aStar">A* algorithm</option>
+            </select>
+          </div>
             <div className="item">
-          <button className="btn btn-dark ml-3 mt-2"  onClick={() => this.visualizeAlgorithm()}>
+          <button className="btn btn-dark ml-3 mt-2 float-left"  onClick={() => this.visualizeAlgorithm()}>
             Visualize Algorithm
           </button>
           </div>
-            <div className="item form-group">
-          <select className="form-control w-50 m-2" value={selectedAlgorithm}
-                  onChange={event => {
-                    this.setState({selectedAlgorithm: event.target.value})
-                  }}
-                  id="selectedAlgorithm">
-            <option value="dijkstra">Dijkstra's algorithm</option>
-            <option value="aStar">A* algorithm</option>
-          </select>
-          </div>
+
             <div className="item">
-              <button className="btn btn-primary mr-3 mt-2 float-right" onClick={() => this.generateWeights()}>Generate weights</button>
+              <button className="btn btn-primary mr-3 mt-2 float-left" onClick={() => this.generateWeights()}>Generate weights</button>
             </div>
           </div>
+
+          <div className="d-flex justify-content-center">
+            <div className="p-2">HELLO</div>
+            <div className="p-2">YES</div>
+          </div>
+
           <div className="grid">
             {grid.map((row, rowIdx) => {
               return (

@@ -30,8 +30,8 @@ function sortNodesByFScore(unvisitedNodes){
 }
 
 function heuristic(startNode, finishNode){
-       const dRow = finishNode.row - startNode.row;
-       const dCol = finishNode.col - startNode.col;
+       const dRow =  startNode.row - finishNode.row;
+       const dCol =  startNode.col - finishNode.col;
        return Math.abs(dRow) + Math.abs(dCol);
 }
 
@@ -39,9 +39,10 @@ function updateUnvisitedNeighbors(node, finishNode, grid){
     const unvisitedNeighbors = GraphHelper.getUnvisitedNeighbors(node, grid);
     for (const neighbor of unvisitedNeighbors) {
         const temp = node.distance + neighbor.weight;
+       // const temp = node.distance + ((neighbor.row - node.row === 0 || neighbor.col - node.col === 0) ? 1 : Math.SQRT2 );
         if ( temp < neighbor.distance) {
             neighbor.distance = temp;
-            neighbor.fScore = temp + heuristic(node, finishNode);
+            neighbor.fScore = temp + heuristic(neighbor, finishNode);
             neighbor.previousNode = node;
         }
     }
