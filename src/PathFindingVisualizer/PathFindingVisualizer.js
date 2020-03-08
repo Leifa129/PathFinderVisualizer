@@ -3,6 +3,7 @@ import Node from './Node/Node';
 
 import './PathFindingVisualizer.css';
 import AlgorithmController from '../Algorithms/AlgorithmController';
+import Dropdown from "react-bootstrap/Dropdown";
 
 let startNodeRow = 10;
 let startNodeCol = 15;
@@ -21,6 +22,7 @@ export default class PathFindingVisualizer extends Component {
       finishSelected: false,
       ranAlgorithm: false,
       selectedAlgorithm: 'dijkstra',
+      speed: 'Normal'
     };
   }
 
@@ -127,14 +129,14 @@ export default class PathFindingVisualizer extends Component {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
           this.animateShortestPath(nodesInShortestPathOrder);
-        }, 10 * i);
+        }, 10 * i * this.getSpeed());
         return;
       }
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).className =
             'node node-visited';
-      }, 10 * i);
+      }, 10 * i * this.getSpeed());
     }
   }
 
@@ -165,8 +167,22 @@ export default class PathFindingVisualizer extends Component {
         const node = nodesInShortestPathOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).className =
             'node node-shortest-path';
-      }, 50 * i);
+      }, 50 * i * this.getSpeed());
     }
+  }
+
+  getSpeed(){
+    let multiplier = 1.0;
+    const {speed} = this.state;
+
+    if(speed === 'Fast')
+      multiplier = 0.5;
+
+    if(speed === 'Slow')
+      multiplier = 2;
+
+    return multiplier;
+
   }
 
   visualizeAlgorithm() {
@@ -207,14 +223,27 @@ export default class PathFindingVisualizer extends Component {
     this.animateInstantAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
   }
 
+  clearBoard(){
+    const grid = getInitialGrid();
+    const ranAlgorithm = false;
+
+    this.setState({grid, ranAlgorithm});
+    clearGrid(grid);
+
+  }
+
+  setSpeed(speed){
+    this.setState({speed});
+  }
+
   render() {
     const {grid, mouseIsPressed, selectedAlgorithm} = this.state;
 
     return (
         <>
-          <div className="header">
-            <div className="item form-group">
-            <select className="form-control w-50 m-2 float-right " value={selectedAlgorithm}
+          <div className="header" style={{backgroundColor: 'gray'}}>
+            <div className="item form-group" style={{flexGrow: 2}}>
+            <select className="form-control w-50 mt-3   float-right " value={selectedAlgorithm}
                     onChange={event => {
                       this.setState({selectedAlgorithm: event.target.value})
                     }}
@@ -224,15 +253,36 @@ export default class PathFindingVisualizer extends Component {
             </select>
           </div>
             <div className="item">
-          <button className="btn btn-outline-success ml-3 mt-2 float-left"  onClick={() => this.visualizeAlgorithm()}>
+          <button className="btn btn-success ml-3 mt-3 float-left"  onClick={() => this.visualizeAlgorithm()}>
             Visualize Algorithm
           </button>
           </div>
 
             <div className="item">
-              <button className="btn btn-outline-primary mr-3 mt-2 float-left" onClick={() => this.generateWeights()}>Generate weights</button>
+              <button className="btn btn-primary mr-3 mt-3 float-right" onClick={() => this.generateWeights()}>Generate weights</button>
+            </div>
+
+            <div className="item mt-3 ml-5">
+            <Dropdown>
+              <Dropdown.Toggle variant="dark" id="dropdown-basic">
+                Speed: {this.state.speed}
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => this.setSpeed('Fast')}>Fast</Dropdown.Item>
+                <Dropdown.Item onClick={() => this.setSpeed('Normal')}>Normal</Dropdown.Item>
+                <Dropdown.Item onClick={() => this.setSpeed('Slow')}>Slow</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+
+            <div className="item">
+              <button className="btn btn-danger mt-3 mr-5" onClick={() => this.clearBoard()}>Clear board</button>
             </div>
           </div>
+
+
+
 
           <div className="d-flex justify-content-center p-2">
             <div className="node node-start  mr-2"></div>
@@ -242,7 +292,7 @@ export default class PathFindingVisualizer extends Component {
             <div>Finish Node</div>
 
             <div className="node node-instant-shortest-path ml-5 mr-2"></div>
-            <div>Optimal-path Node</div>
+            <div>Shortest-path Node</div>
 
             <div className="node ml-5 mr-2"></div>
             <div>Unvisited Node</div>
