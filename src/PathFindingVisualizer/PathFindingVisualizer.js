@@ -287,6 +287,7 @@ const createNode = (col, row) => {
     distance: Infinity,
     isVisited: false,
     weight:  1,
+    fScore: Infinity,
     isWall: false,
     previousNode: null,
   };
@@ -309,6 +310,7 @@ const resetGrid = grid => {
   for (let row = 0; row < NUMBER_OF_ROWS; row++) {
     for (let col = 0; col < NUMBER_OF_COLS; col++) {
       newGrid[row][col].distance = Infinity;
+      newGrid[row][col].fScore = Infinity;
       newGrid[row][col].previousNode = null;
       newGrid[row][col].isVisited = false;
     }
