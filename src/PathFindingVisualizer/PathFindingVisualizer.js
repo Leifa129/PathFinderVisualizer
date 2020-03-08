@@ -224,19 +224,34 @@ export default class PathFindingVisualizer extends Component {
             </select>
           </div>
             <div className="item">
-          <button className="btn btn-dark ml-3 mt-2 float-left"  onClick={() => this.visualizeAlgorithm()}>
+          <button className="btn btn-outline-success ml-3 mt-2 float-left"  onClick={() => this.visualizeAlgorithm()}>
             Visualize Algorithm
           </button>
           </div>
 
             <div className="item">
-              <button className="btn btn-primary mr-3 mt-2 float-left" onClick={() => this.generateWeights()}>Generate weights</button>
+              <button className="btn btn-outline-primary mr-3 mt-2 float-left" onClick={() => this.generateWeights()}>Generate weights</button>
             </div>
           </div>
 
-          <div className="d-flex justify-content-center">
-            <div className="p-2">HELLO</div>
-            <div className="p-2">YES</div>
+          <div className="d-flex justify-content-center p-2">
+            <div className="node node-start  mr-2"></div>
+            <div>Start Node</div>
+
+            <div className="node node-finish ml-5 mr-2"></div>
+            <div>Finish Node</div>
+
+            <div className="node node-instant-shortest-path ml-5 mr-2"></div>
+            <div>Optimal-path Node</div>
+
+            <div className="node ml-5 mr-2"></div>
+            <div>Unvisited Node</div>
+
+            <div className="node ml-5 mr-2" style={{backgroundColor: 'rgba(0, 190, 218, 0.75)'}}> </div>
+            <div>Visited Node</div>
+
+            <div className="node node-wall ml-5 mr-2"></div>
+            <div>Wall Node</div>
           </div>
 
           <div className="grid">
