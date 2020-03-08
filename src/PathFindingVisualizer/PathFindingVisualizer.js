@@ -262,23 +262,24 @@ export default class PathFindingVisualizer extends Component {
               <button className="btn btn-primary mr-3 mt-3 float-right" onClick={() => this.generateWeights()}>Generate weights</button>
             </div>
 
-            <div className="item mt-3 ml-5">
+
+
+            <div className="item">
+              <button className="btn btn-danger mt-3 mr-5" onClick={() => this.clearBoard()}>Clear board</button>
+            </div>
+            <div className="item mt-3 ml-5" style={{width: '200px' , maxWidth: '200px'}}>
             <Dropdown>
               <Dropdown.Toggle variant="dark" id="dropdown-basic">
                 Speed: {this.state.speed}
               </Dropdown.Toggle>
 
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => this.setSpeed('Fast')}>Fast</Dropdown.Item>
-                <Dropdown.Item onClick={() => this.setSpeed('Normal')}>Normal</Dropdown.Item>
-                <Dropdown.Item onClick={() => this.setSpeed('Slow')}>Slow</Dropdown.Item>
+              <Dropdown.Menu className="bg-dark">
+                <Dropdown.Item className="text-danger" onClick={() => this.setSpeed('Fast')}>Fast</Dropdown.Item>
+                <Dropdown.Item className="text-success" onClick={() => this.setSpeed('Normal')}>Normal</Dropdown.Item>
+                <Dropdown.Item className="text-primary" onClick={() => this.setSpeed('Slow')}>Slow</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>
-
-            <div className="item">
-              <button className="btn btn-danger mt-3 mr-5" onClick={() => this.clearBoard()}>Clear board</button>
-            </div>
           </div>
 
 
