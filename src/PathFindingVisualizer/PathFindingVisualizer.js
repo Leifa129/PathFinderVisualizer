@@ -250,6 +250,8 @@ export default class PathFindingVisualizer extends Component {
                                 id="selectedAlgorithm">
                             <option value="dijkstra">Dijkstra's algorithm</option>
                             <option value="aStar">A* algorithm</option>
+                            <option value="greedyBestFirstSearch">Greedy Best-first Search</option>
+                            <option value="breadthFirstSearch">Breadth-first Search</option>
                         </select>
                     </div>
                     <div className="item">

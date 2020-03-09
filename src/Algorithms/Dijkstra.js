@@ -1,48 +1,21 @@
 import GraphHelper from "./GraphHelper";
+import HeuristicSearch from "./HeuristicSearch";
 
-export function dijkstra(grid, startNode, finishNode) {
-    const visitedNodesInOrder = [];
-    startNode.distance = 0;
-    const unvisitedNodes = GraphHelper.getAllNodes(grid);
-    while (!!unvisitedNodes.length) {
-        GraphHelper.sortNodesByDistance(unvisitedNodes);
-        const closestNode = unvisitedNodes.shift();
-        // If we encounter a wall, we skip it.
-         if (closestNode.isWall) continue;
-        // If the closest node is at a distance of infinity,
-        // we must be trapped and should therefore stop.
-        if (closestNode.distance === Infinity) return visitedNodesInOrder;
-        closestNode.isVisited = true;
-        visitedNodesInOrder.push(closestNode);
-        if (closestNode === finishNode) return visitedNodesInOrder;
-        updateUnvisitedNeighbors(closestNode, grid);
-    }
-}
 
-function updateUnvisitedNeighbors(node, grid){
-    const unvisitedNeighbors = GraphHelper.getUnvisitedNeighbors(node, grid);
-    for (const neighbor of unvisitedNeighbors) {
+// Dijkstras is infact a special case of A* algorithm where heuristic = 0. In other words, we only rely on the distance from the start node.
+export default class Dijkstra extends HeuristicSearch {
 
-         const temp = node.distance + neighbor.weight;
-         if(temp < neighbor.distance) {
-             neighbor.distance = temp;
-             neighbor.previousNode = node;
-         }
-        //For unweighted graphs, basically breadth first search.
-       // neighbor.distance = node.distance + 1;
-       // neighbor.previousNode = node;
+    updateUnvisitedNeighbors(node, finishNode, grid) {
+        const unvisitedNeighbors = GraphHelper.getUnvisitedNeighbors(node, grid);
+        for (const neighbor of unvisitedNeighbors) {
+            const temp = node.fScore + neighbor.weight;
+            if (temp < neighbor.fScore) {
+                neighbor.fScore = temp;
+                neighbor.previousNode = node;
+            }
+        }
+
     }
 
 }
 
-
-
-export function getNodesInShortestPathOrder(finishNode) {
-    const nodesInShortestPathOrder = [];
-    let currentNode = finishNode;
-    while (currentNode !== null) {
-        nodesInShortestPathOrder.unshift(currentNode);
-        currentNode = currentNode.previousNode;
-    }
-    return nodesInShortestPathOrder;
-}

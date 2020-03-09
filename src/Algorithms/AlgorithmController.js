@@ -1,15 +1,22 @@
-import {dijkstra, getNodesInShortestPathOrder} from '../Algorithms/Dijkstra';
+import Dijkstra from '../Algorithms/Dijkstra';
 import {aStar} from '../Algorithms/AStar';
+import GreedyBestFirstSearch from "./GreedyBestFirstSearch";
+import BFS from './BFS';
 export default class AlgorithmController {
 
     static runAlgorithm(grid, startNode, finishNode, algorithm){
         switch(algorithm){
             case 'dijkstra':
-               return dijkstra(grid, startNode, finishNode);
+               return new Dijkstra().search(grid, startNode, finishNode);
 
             case 'aStar':
                 return aStar(grid, startNode, finishNode);
-                break;
+
+            case 'greedyBestFirstSearch':
+                return new GreedyBestFirstSearch().search(grid, startNode, finishNode);
+
+            case 'breadthFirstSearch':
+                return new BFS().search(grid, startNode, finishNode);
 
             default:
                 break;
