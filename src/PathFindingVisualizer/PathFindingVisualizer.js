@@ -113,7 +113,7 @@ export default class PathFindingVisualizer extends Component {
         }
 
         // Make sure that we dont put a wall over the start or finish node
-        if (!(row === startNodeRow && col == startNodeCol) && !(row === finishNodeRow && col === finishNodeCol)) {
+        if (!(row === startNodeRow && col === startNodeCol) && !(row === finishNodeRow && col === finishNodeCol)) {
             const newGrid = getNewGridWithWallToggled(grid, row, col);
             this.setState({grid: newGrid});
 
@@ -287,7 +287,7 @@ export default class PathFindingVisualizer extends Component {
                         </select>
                     </div>
                     <div className="item form-check">
-                        <label for="allowDiagonals" className="mt-4 ml-4 text-white-50" style={{userSelect: 'none', fontSize:'18px'}}>
+                        <label htmlFor="allowDiagonals" className="mt-4 ml-4 text-white-50" style={{userSelect: 'none', fontSize:'18px'}}>
                             <input className="form-check-item " style={{width:'18px', height:'18px'}} type="checkbox"
                                    id="allowDiagonals"
                                    value={this.state.allowDiagonals}

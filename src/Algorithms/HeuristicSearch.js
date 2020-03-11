@@ -11,8 +11,6 @@ export default class HeuristicSearch {
         startNode.fScore = 0;
         this.diagonalMovement = diagonalMovement;
 
-        console.log(this.diagonalMovement);
-
         const unvisitedNodes = GraphHelper.getAllNodes(grid);
         while (!!unvisitedNodes.length) {
             this.sortNodesByFScore(unvisitedNodes);
