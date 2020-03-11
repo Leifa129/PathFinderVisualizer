@@ -22,6 +22,7 @@ export default class PathFindingVisualizer extends Component {
             finishSelected: false,
             ranAlgorithm: false,
             selectedAlgorithm: 'dijkstra',
+            allowDiagonals: false,
             speed: 'Normal',
         };
     }
@@ -205,13 +206,13 @@ export default class PathFindingVisualizer extends Component {
     }
 
     visualizeAlgorithm() {
-        const {grid, selectedAlgorithm} = this.state;
+        const {grid, selectedAlgorithm, allowDiagonals} = this.state;
         clearGrid(grid);
         const newGrid = resetGrid(grid);
         const startNode = newGrid[startNodeRow][startNodeCol];
         const finishNode = newGrid[finishNodeRow][finishNodeCol];
 
-        const visitedNodesInOrder = AlgorithmController.runAlgorithm(newGrid, startNode, finishNode, selectedAlgorithm);
+        const visitedNodesInOrder = AlgorithmController.runAlgorithm(newGrid, startNode, finishNode, selectedAlgorithm, allowDiagonals);
         const nodesInShortestPathOrder = AlgorithmController.getNodesInShortestPathOrder(finishNode);
         this.animateSearchSpace(visitedNodesInOrder, nodesInShortestPathOrder);
         this.setState({ranAlgorithm: true});
@@ -230,14 +231,26 @@ export default class PathFindingVisualizer extends Component {
 
     }
 
+    diagonalMovementsChanged() {
+        this.setState(prevState => {
+           return {allowDiagonals: !prevState.allowDiagonals}
+        }, () => {
+            if(this.state.ranAlgorithm){
+                this.clearTimers();
+                this.visualizeInstantAlgorithm();
+            }
+        });
+
+    }
+
     visualizeInstantAlgorithm() {
-        const {grid, selectedAlgorithm} = this.state;
+        const {grid, selectedAlgorithm, allowDiagonals} = this.state;
         clearGrid(grid);
         const newGrid = resetGrid(grid)
 
         const startNode = newGrid[startNodeRow][startNodeCol];
         const finishNode = newGrid[finishNodeRow][finishNodeCol];
-        const visitedNodesInOrder = AlgorithmController.runAlgorithm(newGrid, startNode, finishNode, selectedAlgorithm);
+        const visitedNodesInOrder = AlgorithmController.runAlgorithm(newGrid, startNode, finishNode, selectedAlgorithm, allowDiagonals);
         const nodesInShortestPathOrder = AlgorithmController.getNodesInShortestPathOrder(finishNode);
         this.animateInstantAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
     }
@@ -262,7 +275,7 @@ export default class PathFindingVisualizer extends Component {
             <>
                 <div className="header" style={{backgroundColor: 'gray'}}>
                     <div className="item form-group" style={{flexGrow: 2}}>
-                        <select className="form-control w-50 mt-3   float-right " value={selectedAlgorithm}
+                        <select className="form-control w-75 mt-3   float-right " value={selectedAlgorithm}
                                 onChange={event => {
                                     this.setState({selectedAlgorithm: event.target.value})
                                 }}
@@ -272,6 +285,16 @@ export default class PathFindingVisualizer extends Component {
                             <option value="greedyBestFirstSearch">Greedy Best-first Search</option>
                             <option value="breadthFirstSearch">Breadth-first Search</option>
                         </select>
+                    </div>
+                    <div className="item form-check">
+                        <label for="allowDiagonals" className="mt-4 ml-4 text-white-50" style={{userSelect: 'none', fontSize:'18px'}}>
+                            <input className="form-check-item " style={{width:'18px', height:'18px'}} type="checkbox"
+                                   id="allowDiagonals"
+                                   value={this.state.allowDiagonals}
+                                   onChange={() => this.diagonalMovementsChanged()}  />
+                            Allow diagonals
+                        </label>
+
                     </div>
                     <div className="item">
                         <button className="btn btn-success ml-3 mt-3 float-left"
@@ -330,6 +353,19 @@ export default class PathFindingVisualizer extends Component {
                     <div className="node node-wall ml-5 mr-2"></div>
                     <div>Wall Node</div>
                 </div>
+
+                {
+                    this.state.allowDiagonals ?
+                <span className="d-flex justify-content-center">
+                    <span className={"mt-3 text-danger"} style={{fontSize: '20px'}}>
+                        Note that algorithms are currently ignoring weights when diagonal movement is enabled.</span>
+                </span> :
+                        // DONT ASK xD
+                    <div>
+                        <div style={{fontSize: '14.5px'}}>&nbsp;</div>
+                        <div>&nbsp;</div>
+                    </div>
+                }
 
                 <div className="grid">
                     {grid.map((row, rowIdx) => {

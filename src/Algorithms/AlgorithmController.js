@@ -4,19 +4,19 @@ import GreedyBestFirstSearch from "./GreedyBestFirstSearch";
 import BFS from './BFS';
 export default class AlgorithmController {
 
-    static runAlgorithm(grid, startNode, finishNode, algorithm){
+    static runAlgorithm(grid, startNode, finishNode, algorithm, allowDiagonals){
         switch(algorithm){
             case 'dijkstra':
-               return new Dijkstra().search(grid, startNode, finishNode);
+               return new Dijkstra().search(grid, startNode, finishNode, allowDiagonals);
 
             case 'aStar':
-                return aStar(grid, startNode, finishNode);
+                return aStar(grid, startNode, finishNode, allowDiagonals);
 
             case 'greedyBestFirstSearch':
-                return new GreedyBestFirstSearch().search(grid, startNode, finishNode);
+                return new GreedyBestFirstSearch().search(grid, startNode, finishNode, allowDiagonals);
 
             case 'breadthFirstSearch':
-                return new BFS().search(grid, startNode, finishNode);
+                return new BFS().search(grid, startNode, finishNode, allowDiagonals);
 
             default:
                 break;

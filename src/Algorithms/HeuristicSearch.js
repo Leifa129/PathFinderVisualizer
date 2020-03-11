@@ -1,12 +1,17 @@
 import GraphHelper from "./GraphHelper";
 
 // This class implements A*, but also leaves methods that can be overridden in order to implement other algorithms that relies on heuristics.
+// Could use a heap for better performances, but for visualization purposes it makes no difference.
 export default class HeuristicSearch {
-    search(grid, startNode, finishNode) {
-        const visitedNodesInOrder = [];
+    diagonalMovement = false;
 
+    search(grid, startNode, finishNode, diagonalMovement) {
+        const visitedNodesInOrder = [];
         startNode.distance = 0;
         startNode.fScore = 0;
+        this.diagonalMovement = diagonalMovement;
+
+        console.log(this.diagonalMovement);
 
         const unvisitedNodes = GraphHelper.getAllNodes(grid);
         while (!!unvisitedNodes.length) {
@@ -37,17 +42,25 @@ export default class HeuristicSearch {
         });
     }
 
-    // Default manhattan distance
-   heuristic(startNode, finishNode){
-        const dRow =  startNode.row - finishNode.row;
-        const dCol =  startNode.col - finishNode.col;
-        return Math.abs(dRow) + Math.abs(dCol);
+
+    heuristic(node, finishNode){
+        const dRow =  Math.abs(node.row - finishNode.row);
+        const dCol =  Math.abs(node.col - finishNode.col);
+        if(!this.diagonalMovement)
+            return dRow + dCol;
+
+        const D = Math.SQRT2 - 1;
+        return (dCol < dRow)  ?  (D * dCol + dRow) : (D * dRow + dCol);
     }
 
-   updateUnvisitedNeighbors(node, finishNode, grid){
-        const unvisitedNeighbors = GraphHelper.getUnvisitedNeighbors(node, grid);
+    updateUnvisitedNeighbors(node, finishNode, grid){
+        const unvisitedNeighbors = GraphHelper.getUnvisitedNeighbors(node, grid, this.diagonalMovement);
         for (const neighbor of unvisitedNeighbors) {
-            const temp = node.distance + neighbor.weight;
+            // Weighted currently not supported with diagonal movements.
+            const temp = node.distance +
+                (this.diagonalMovement ?
+                    ((neighbor.col - node.col === 0 || neighbor.row - node.row === 0 ) ? 1 : Math.SQRT2)
+                    : node.weight);
             if ( temp < neighbor.distance) {
                 neighbor.distance = temp;
                 neighbor.fScore = temp + this.heuristic(neighbor, finishNode);
