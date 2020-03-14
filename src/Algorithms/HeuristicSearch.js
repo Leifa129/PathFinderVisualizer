@@ -56,6 +56,7 @@ export default class HeuristicSearch {
     * Note that this function takes the pythagoras of going either first 1 step in y direction and then 1 step in x direction  or
     * going 1 step in x direction first and then going one step in y direction. It will return the minimum value of the two cases.
      */
+    // TODO check for walls
     findDiagonalLength(node, neighbor, grid){
         // Diagonal is somewhere to the right
         if(neighbor.col - node.col === 1){
