@@ -355,10 +355,10 @@ export default class PathFindingVisualizer extends Component {
                 </div>
 
                 {
-                    this.state.allowDiagonals ?
+                    this.state.selectedAlgorithm === 'breadthFirstSearch'  ?
                 <span className="d-flex justify-content-center">
                     <span className={"mt-3 text-danger"} style={{fontSize: '20px'}}>
-                        Note that algorithms are currently ignoring weights when diagonal movement is enabled.</span>
+                        Note that breadth first search doesn't consider weights.</span>
                 </span> :
                         // DONT ASK xD
                     <div>

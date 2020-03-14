@@ -51,14 +51,52 @@ export default class HeuristicSearch {
         return (dCol < dRow)  ?  (D * dCol + dRow) : (D * dRow + dCol);
     }
 
+    findDiagonalLength(node, neighbor, grid){
+        // Diagonal is somewhere to the right
+        if(neighbor.col - node.col === 1){
+            // Diagonal is towards top right corner
+            if(neighbor.row - node.row === 1){
+                return Math.min(
+                    Math.sqrt(Math.pow(grid[node.row + 1][node.col].weight, 2) + Math.pow(neighbor.weight, 2)),
+                    Math.sqrt(Math.pow(grid[node.row][node.col + 1].weight, 2) + Math.pow(neighbor.weight, 2))
+                )
+            }
+            // Diagonal is towards bottom right corner
+            else{
+                return Math.min(
+                    Math.sqrt(Math.pow(grid[node.row - 1][node.col].weight, 2) + Math.pow(neighbor.weight, 2)),
+                    Math.sqrt(Math.pow(grid[node.row][node.col + 1].weight, 2) + Math.pow(neighbor.weight, 2))
+                )
+            }
+        }
+        // Diagonal is somewhere to the left
+        else{
+            // Diagonal is towards top left corner
+            if(neighbor.row - node.row === 1){
+                return Math.min(
+                    Math.sqrt(Math.pow(grid[node.row + 1][node.col].weight, 2) + Math.pow(neighbor.weight, 2)),
+                    Math.sqrt(Math.pow(grid[node.row][node.col - 1].weight, 2) + Math.pow(neighbor.weight, 2))
+                )
+            }
+            // Diagonal is towards bottom left corner
+            else{
+                return Math.min(
+                    Math.sqrt(Math.pow(grid[node.row - 1][node.col].weight, 2) + Math.pow(neighbor.weight, 2)),
+                    Math.sqrt(Math.pow(grid[node.row][node.col - 1].weight, 2) + Math.pow(neighbor.weight, 2))
+                )
+            }
+        }
+
+    }
+
     updateUnvisitedNeighbors(node, finishNode, grid){
         const unvisitedNeighbors = GraphHelper.getUnvisitedNeighbors(node, grid, this.diagonalMovement);
         for (const neighbor of unvisitedNeighbors) {
             // Weighted currently not supported with diagonal movements.
             const temp = node.distance +
                 (this.diagonalMovement ?
-                    ((neighbor.col - node.col === 0 || neighbor.row - node.row === 0 ) ? 1 : Math.SQRT2)
-                    : node.weight);
+                    ((neighbor.col - node.col === 0 || neighbor.row - node.row === 0 ) ? neighbor.weight : this.findDiagonalLength(node, neighbor, grid))
+                    : neighbor.weight);
             if ( temp < neighbor.distance) {
                 neighbor.distance = temp;
                 neighbor.fScore = temp + this.heuristic(neighbor, finishNode);
