@@ -52,48 +52,6 @@ export default class HeuristicSearch {
     }
 
 
-    /*
-    * Note that this function takes the pythagoras of going either first 1 step in y direction and then 1 step in x direction  or
-    * going 1 step in x direction first and then going one step in y direction. It will return the minimum value of the two cases.
-     */
-    // TODO check for walls
-    findDiagonalLength(node, neighbor, grid){
-        // Diagonal is somewhere to the right
-        if(neighbor.col - node.col === 1){
-            // Diagonal is towards top right corner
-            if(neighbor.row - node.row === 1){
-                return Math.min(
-                    Math.sqrt(Math.pow(grid[node.row + 1][node.col].weight, 2) + Math.pow(neighbor.weight, 2)),
-                    Math.sqrt(Math.pow(grid[node.row][node.col + 1].weight, 2) + Math.pow(neighbor.weight, 2))
-                )
-            }
-            // Diagonal is towards bottom right corner
-            else{
-                return Math.min(
-                    Math.sqrt(Math.pow(grid[node.row - 1][node.col].weight, 2) + Math.pow(neighbor.weight, 2)),
-                    Math.sqrt(Math.pow(grid[node.row][node.col + 1].weight, 2) + Math.pow(neighbor.weight, 2))
-                )
-            }
-        }
-        // Diagonal is somewhere to the left
-        else{
-            // Diagonal is towards top left corner
-            if(neighbor.row - node.row === 1){
-                return Math.min(
-                    Math.sqrt(Math.pow(grid[node.row + 1][node.col].weight, 2) + Math.pow(neighbor.weight, 2)),
-                    Math.sqrt(Math.pow(grid[node.row][node.col - 1].weight, 2) + Math.pow(neighbor.weight, 2))
-                )
-            }
-            // Diagonal is towards bottom left corner
-            else{
-                return Math.min(
-                    Math.sqrt(Math.pow(grid[node.row - 1][node.col].weight, 2) + Math.pow(neighbor.weight, 2)),
-                    Math.sqrt(Math.pow(grid[node.row][node.col - 1].weight, 2) + Math.pow(neighbor.weight, 2))
-                )
-            }
-        }
-
-    }
 
     updateUnvisitedNeighbors(node, finishNode, grid){
         const unvisitedNeighbors = GraphHelper.getUnvisitedNeighbors(node, grid, this.diagonalMovement);
@@ -101,7 +59,7 @@ export default class HeuristicSearch {
             // Weighted currently not supported with diagonal movements.
             const temp = node.distance +
                 (this.diagonalMovement ?
-                    ((neighbor.col - node.col === 0 || neighbor.row - node.row === 0 ) ? neighbor.weight : this.findDiagonalLength(node, neighbor, grid))
+                    ((neighbor.col - node.col === 0 || neighbor.row - node.row === 0 ) ? neighbor.weight : GraphHelper.findDiagonalLength(node, neighbor, grid))
                     : neighbor.weight);
             if ( temp < neighbor.distance) {
                 neighbor.distance = temp;
