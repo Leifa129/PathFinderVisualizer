@@ -246,7 +246,7 @@ export default class PathFindingVisualizer extends Component {
     visualizeInstantAlgorithm() {
         const {grid, selectedAlgorithm, allowDiagonals} = this.state;
         clearGrid(grid);
-        const newGrid = resetGrid(grid)
+        const newGrid = resetGrid(grid);
 
         const startNode = newGrid[startNodeRow][startNodeCol];
         const finishNode = newGrid[finishNodeRow][finishNodeCol];
@@ -451,7 +451,7 @@ const resetGrid = grid => {
     }
 
     return newGrid;
-}
+};
 
 const clearGrid = grid => {
     for (let row = 0; row < NUMBER_OF_ROWS; row++) {
@@ -475,4 +475,4 @@ const clearGrid = grid => {
     }
 
 
-}
+};
