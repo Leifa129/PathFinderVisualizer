@@ -143,7 +143,6 @@ export default class PathFindingVisualizer extends Component {
     }
 
     animateSearchSpace(visitedNodesInOrder, nodesInShortestPathOrder) {
-        this.clearTimers();
         for (let i = 0; i <= visitedNodesInOrder.length; i++) {
                 if (i === visitedNodesInOrder.length) {
                     this.timers.push(setTimeout(() => {
@@ -207,7 +206,7 @@ export default class PathFindingVisualizer extends Component {
 
     visualizeAlgorithm() {
         const {grid, selectedAlgorithm, allowDiagonals} = this.state;
-        clearGrid(grid);
+        this.clearGridAndTimers(grid);
         const newGrid = resetGrid(grid);
         const startNode = newGrid[startNodeRow][startNodeCol];
         const finishNode = newGrid[finishNodeRow][finishNodeCol];
@@ -236,7 +235,6 @@ export default class PathFindingVisualizer extends Component {
            return {allowDiagonals: !prevState.allowDiagonals}
         }, () => {
             if(this.state.ranAlgorithm){
-                this.clearTimers();
                 this.visualizeInstantAlgorithm();
             }
         });
@@ -245,7 +243,7 @@ export default class PathFindingVisualizer extends Component {
 
     visualizeInstantAlgorithm() {
         const {grid, selectedAlgorithm, allowDiagonals} = this.state;
-        clearGrid(grid);
+        this.clearGridAndTimers(grid);
         const newGrid = resetGrid(grid);
 
         const startNode = newGrid[startNodeRow][startNodeCol];
@@ -259,13 +257,17 @@ export default class PathFindingVisualizer extends Component {
         const grid = getInitialGrid();
         const ranAlgorithm = false;
         this.setState({grid, ranAlgorithm});
-        this.clearTimers();
-        clearGrid(grid);
+        this.clearGridAndTimers(grid);
 
     }
 
     setSpeed(speed) {
         this.setState({speed});
+    }
+
+    clearGridAndTimers(grid){
+        this.clearTimers();
+        clearGrid(grid);
     }
 
     render() {
