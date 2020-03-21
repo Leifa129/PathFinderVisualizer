@@ -24,6 +24,7 @@ export default class PathFindingVisualizer extends Component {
             selectedAlgorithm: 'dijkstra',
             allowDiagonals: false,
             speed: 'Normal',
+            distance: 0,
         };
     }
 
@@ -144,17 +145,17 @@ export default class PathFindingVisualizer extends Component {
 
     animateSearchSpace(visitedNodesInOrder, nodesInShortestPathOrder) {
         for (let i = 0; i <= visitedNodesInOrder.length; i++) {
-                if (i === visitedNodesInOrder.length) {
-                    this.timers.push(setTimeout(() => {
-                        this.animateShortestPath(nodesInShortestPathOrder);
-                    }, 10 * i * this.getSpeed()));
-                    return;
-                }
+            if (i === visitedNodesInOrder.length) {
                 this.timers.push(setTimeout(() => {
-                    const node = visitedNodesInOrder[i];
-                    document.getElementById(`node-${node.row}-${node.col}`).className =
-                        'node node-visited';
+                    this.animateShortestPath(nodesInShortestPathOrder);
                 }, 10 * i * this.getSpeed()));
+                return;
+            }
+            this.timers.push(setTimeout(() => {
+                const node = visitedNodesInOrder[i];
+                document.getElementById(`node-${node.row}-${node.col}`).className =
+                    'node node-visited';
+            }, 10 * i * this.getSpeed()));
         }
     }
 
@@ -181,7 +182,7 @@ export default class PathFindingVisualizer extends Component {
 
     animateShortestPath(nodesInShortestPathOrder) {
         for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
-              this.shortestPathTimers.push(setTimeout(() => {
+            this.shortestPathTimers.push(setTimeout(() => {
                 const node = nodesInShortestPathOrder[i];
 
                 document.getElementById(`node-${node.row}-${node.col}`).className =
@@ -214,7 +215,7 @@ export default class PathFindingVisualizer extends Component {
         const visitedNodesInOrder = AlgorithmController.runAlgorithm(newGrid, startNode, finishNode, selectedAlgorithm, allowDiagonals);
         const nodesInShortestPathOrder = AlgorithmController.getNodesInShortestPathOrder(finishNode);
         this.animateSearchSpace(visitedNodesInOrder, nodesInShortestPathOrder);
-        this.setState({ranAlgorithm: true});
+        this.setState({ranAlgorithm: true, distance: finishNode.distance});
     }
 
     generateWeights() {
@@ -232,13 +233,12 @@ export default class PathFindingVisualizer extends Component {
 
     diagonalMovementsChanged() {
         this.setState(prevState => {
-           return {allowDiagonals: !prevState.allowDiagonals}
+            return {allowDiagonals: !prevState.allowDiagonals}
         }, () => {
             if(this.state.ranAlgorithm){
                 this.visualizeInstantAlgorithm();
             }
         });
-
     }
 
     visualizeInstantAlgorithm() {
@@ -251,6 +251,7 @@ export default class PathFindingVisualizer extends Component {
         const visitedNodesInOrder = AlgorithmController.runAlgorithm(newGrid, startNode, finishNode, selectedAlgorithm, allowDiagonals);
         const nodesInShortestPathOrder = AlgorithmController.getNodesInShortestPathOrder(finishNode);
         this.animateInstantAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
+        this.setState({distance: finishNode.distance});
     }
 
     clearBoard() {
@@ -357,17 +358,34 @@ export default class PathFindingVisualizer extends Component {
                 </div>
 
                 {
-                    this.state.selectedAlgorithm === 'breadthFirstSearch'  ?
-                <span className="d-flex justify-content-center">
+                    this.state.ranAlgorithm && this.state.selectedAlgorithm !== 'breadthFirstSearch'
+                    && <span className="d-flex justify-content-center">
+                        <span className={"mt-3 text-success"} style={{fontSize: '20px'}}>
+                          Distance =  {this.state.allowDiagonals ?
+                            this.state.distance.toFixed(3)
+                            :
+                            this.state.distance
+                        }
+                        </span>
+                </span>
+                }
+
+                {
+                    this.state.selectedAlgorithm === 'breadthFirstSearch'  &&
+                        <span className="d-flex justify-content-center">
                     <span className={"mt-3 text-danger"} style={{fontSize: '20px'}}>
                         Note that breadth first search doesn't consider weights.</span>
-                </span> :
-                        // DONT ASK xD
+                </span>
+                }
+
+                {
+                    !this.state.ranAlgorithm && this.state.selectedAlgorithm !== 'breadthFirstSearch' &&
                     <div>
                         <div style={{fontSize: '14.5px'}}>&nbsp;</div>
                         <div>&nbsp;</div>
                     </div>
                 }
+
 
                 <div className="grid">
                     {grid.map((row, rowIdx) => {
